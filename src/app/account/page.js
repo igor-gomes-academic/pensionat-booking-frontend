@@ -26,9 +26,11 @@ const buttonStyle = {
 export default function AccountPage() {
   const [customer, setCustomer] = useState(null)
   const [bookings, setBookings] = useState([])
+  const [rooms, setRooms] = useState([])
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [showEditForm, setShowEditForm] = useState(false)
+  const [editBookingId, setEditBookingId] = useState(null)
 
   const [updateForm, setUpdateForm] = useState({
     firstName: '',
@@ -36,6 +38,12 @@ export default function AccountPage() {
     email: '',
     hashedPassword: '',
     phone: ''
+  })
+
+  const [updateBookingForm, setUpdateBookingForm] = useState({
+    roomId: '',
+    startDate: '',
+    endDate: '',
   })
 
   useEffect(() => {
@@ -51,6 +59,7 @@ export default function AccountPage() {
         phone: parsed.phoneNumber
       })
       loadBookings(parsed.id)
+      loadRooms()
     } else {
       window.location.href = '/login'
     }
@@ -61,6 +70,16 @@ export default function AccountPage() {
       const response = await fetch(`${API_BASE_URL}/bookings`)
       const data = await response.json()
       setBookings(data.filter(b => b.customer?.id === customerId))
+    } catch (err) {
+      setError(err.message)
+    }
+  }
+
+  async function loadRooms() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/rooms`)
+      const data = await response.json()
+      setRooms(data)
     } catch (err) {
       setError(err.message)
     }
@@ -108,6 +127,44 @@ async function handleUpdate(e) {
 
       setMessage('Booking cancelled successfully')
       setError('')
+      loadBookings(customer.id)
+    } catch (err) {
+      setError(err.message)
+    }
+  }
+
+  function startEditBooking(booking) {
+    setEditBookingId(booking.id)
+    setUpdateBookingForm({
+      roomId: booking.room?.id || '',
+      startDate: booking.startDate,
+      endDate: booking.endDate,
+    })
+  }
+
+  async function updateBooking(e) {
+    e.preventDefault()
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/bookings/${editBookingId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerId: customer.id,
+          roomId: Number(updateBookingForm.roomId),
+          startDate: updateBookingForm.startDate,
+          endDate: updateBookingForm.endDate,
+        }),
+      })
+
+      if (!response.ok) {
+        const message = await response.text()
+        throw new Error(message || 'Failed to update booking')
+      }
+
+      setMessage('Booking updated successfully')
+      setError('')
+      setEditBookingId(null)
       loadBookings(customer.id)
     } catch (err) {
       setError(err.message)
@@ -180,15 +237,79 @@ async function handleUpdate(e) {
                     <td style={{ padding: "0.5rem" }}>{booking.bookingStatus}</td>
                     <td style={{ padding: "0.5rem" }}>
                       {booking.bookingStatus === 'ACTIVE' && (
-                        <button onClick={() => cancelBooking(booking.id)} style={{ ...buttonStyle, padding: "0.4rem 1rem" }}>
-                          Cancel
-                        </button>
+                        <div style={{ display: "flex", gap: "0.5rem" }}>
+                          <button onClick={() => startEditBooking(booking)} style={{ ...buttonStyle, padding: "0.4rem 1rem" }}>
+                            Edit
+                          </button>
+
+                          <button onClick={() => cancelBooking(booking.id)} style={{ ...buttonStyle, padding: "0.4rem 1rem" }}>
+                            Cancel
+                          </button>
+                        </div>
                       )}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          )}
+
+          {editBookingId && (
+            <form
+              onSubmit={updateBooking}
+              style={{
+                display: "flex",
+                gap: "1rem",
+                flexWrap: "wrap",
+                alignItems: "center",
+                marginTop: "1.5rem",
+              }}
+            >
+              <select
+                value={updateBookingForm.roomId}
+                onChange={(e) =>
+                  setUpdateBookingForm({ ...updateBookingForm, roomId: e.target.value })
+                }
+                style={inputStyle}
+              >
+                <option value="">Select room</option>
+                {rooms.map((room) => (
+                  <option key={room.id} value={room.id}>
+                    Room {room.roomNumber}
+                  </option>
+                ))}
+              </select>
+
+              <input
+                type="date"
+                value={updateBookingForm.startDate}
+                onChange={(e) =>
+                  setUpdateBookingForm({ ...updateBookingForm, startDate: e.target.value })
+                }
+                style={inputStyle}
+              />
+
+              <input
+                type="date"
+                value={updateBookingForm.endDate}
+                onChange={(e) =>
+                  setUpdateBookingForm({ ...updateBookingForm, endDate: e.target.value })
+                }
+                style={inputStyle}
+              />
+
+              <button type="submit" style={buttonStyle}>
+                Save booking
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setEditBookingId(null)}
+                style={buttonStyle}
+              >
+                Cancel edit
+              </button>
+            </form>
           )}
         </section>
       </div>
