@@ -25,20 +25,11 @@ const buttonStyle = {
 export default function BookingsPage() {
   const [rooms, setRooms] = useState([])
   const [customers, setCustomers] = useState([])
-  const [bookings, setBookings] = useState([])
   const [currentCustomer, setCurrentCustomer] = useState(null)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
   const [bookingForm, setBookingForm] = useState({
-    customerId: '',
-    roomId: '',
-    startDate: '',
-    endDate: '',
-  })
-
-  const [updateBookingForm, setUpdateBookingForm] = useState({
-    id: '',
     customerId: '',
     roomId: '',
     startDate: '',
@@ -51,13 +42,7 @@ export default function BookingsPage() {
     if (storedCustomer) {
       const customer = JSON.parse(storedCustomer)
       setCurrentCustomer(customer)
-
       setBookingForm((previousForm) => ({
-        ...previousForm,
-        customerId: customer.id,
-      }))
-
-      setUpdateBookingForm((previousForm) => ({
         ...previousForm,
         customerId: customer.id,
       }))
@@ -85,15 +70,13 @@ export default function BookingsPage() {
 
   async function loadData() {
     try {
-      const [roomsData, customersData, bookingsData] = await Promise.all([
+      const [roomsData, customersData] = await Promise.all([
         apiRequest('/rooms'),
         apiRequest('/customers'),
-        apiRequest('/bookings'),
       ])
 
       setRooms(roomsData)
       setCustomers(customersData)
-      setBookings(bookingsData)
       setError('')
     } catch (err) {
       setError(err.message)
@@ -123,48 +106,6 @@ export default function BookingsPage() {
 
       setMessage('Booking created successfully')
       setError('')
-      loadData()
-    } catch (err) {
-      setError(err.message)
-    }
-  }
-
-  async function updateBooking(event) {
-    event.preventDefault()
-
-    try {
-      await apiRequest(`/bookings/${updateBookingForm.id}`, {
-        method: 'PUT',
-        body: JSON.stringify({
-          customerId: Number(updateBookingForm.customerId),
-          roomId: Number(updateBookingForm.roomId),
-          startDate: updateBookingForm.startDate,
-          endDate: updateBookingForm.endDate,
-        }),
-      })
-
-      setMessage('Booking updated successfully')
-      setError('')
-      loadData()
-    } catch (err) {
-      setError(err.message)
-    }
-  }
-
-  async function cancelBooking(id) {
-    try {
-      const response = await fetch(`${API_BASE_URL}/bookings/${id}/cancel`, {
-        method: 'PATCH',
-      })
-
-      if (!response.ok) {
-        const message = await response.text()
-        throw new Error(message || 'Request failed')
-      }
-
-      setMessage('Booking cancelled successfully')
-      setError('')
-      loadData()
     } catch (err) {
       setError(err.message)
     }
@@ -227,102 +168,6 @@ export default function BookingsPage() {
               Create booking
             </button>
           </form>
-        </section>
-
-        <section style={{ marginBottom: "2rem" }}>
-          <h2>Update booking</h2>
-
-          <form onSubmit={updateBooking} style={{ display: "flex", gap: "1rem", flexWrap: "wrap", alignItems: "center" }}>
-            <input
-              placeholder="Booking ID"
-              value={updateBookingForm.id}
-              onChange={(e) => setUpdateBookingForm({ ...updateBookingForm, id: e.target.value })}
-              style={inputStyle}
-            />
-
-            {currentCustomer ? (
-              <input
-                value={`${currentCustomer.firstName} ${currentCustomer.lastName}`}
-                readOnly
-                style={inputStyle}
-              />
-            ) : (
-              <select
-                value={updateBookingForm.customerId}
-                onChange={(e) => setUpdateBookingForm({ ...updateBookingForm, customerId: e.target.value })}
-                style={inputStyle}
-              >
-                <option value="">Select customer</option>
-                {customers.map((customer) => (
-                  <option key={customer.id} value={customer.id}>
-                    {customer.firstName} {customer.lastName}
-                  </option>
-                ))}
-              </select>
-            )}
-
-            <select
-              value={updateBookingForm.roomId}
-              onChange={(e) => setUpdateBookingForm({ ...updateBookingForm, roomId: e.target.value })}
-              style={inputStyle}
-            >
-              <option value="">Select room</option>
-              {rooms.map((room) => (
-                <option key={room.id} value={room.id}>
-                  Room {room.roomNumber}
-                </option>
-              ))}
-            </select>
-
-            <input type="date" value={updateBookingForm.startDate} onChange={(e) => setUpdateBookingForm({ ...updateBookingForm, startDate: e.target.value })} style={inputStyle} />
-            <input type="date" value={updateBookingForm.endDate} onChange={(e) => setUpdateBookingForm({ ...updateBookingForm, endDate: e.target.value })} style={inputStyle} />
-
-            <button type="submit" style={buttonStyle}>
-              Update booking
-            </button>
-          </form>
-        </section>
-
-        <section>
-          <h2>My bookings</h2>
-
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr>
-                <th style={{ textAlign: "left", padding: "0.5rem" }}>ID</th>
-                <th style={{ textAlign: "left", padding: "0.5rem" }}>Customer</th>
-                <th style={{ textAlign: "left", padding: "0.5rem" }}>Room</th>
-                <th style={{ textAlign: "left", padding: "0.5rem" }}>Dates</th>
-                <th style={{ textAlign: "left", padding: "0.5rem" }}>Status</th>
-                <th style={{ textAlign: "left", padding: "0.5rem" }}>Action</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {bookings
-                .filter((booking) =>
-                  currentCustomer ? booking.customer?.id === currentCustomer.id : true
-                )
-                .map((booking) => (
-                  <tr key={booking.id}>
-                    <td style={{ padding: "0.5rem" }}>{booking.id}</td>
-                    <td style={{ padding: "0.5rem" }}>
-                      {booking.customer?.firstName} {booking.customer?.lastName}
-                    </td>
-                    <td style={{ padding: "0.5rem" }}>Room {booking.room?.roomNumber}</td>
-                    <td style={{ padding: "0.5rem" }}>{booking.startDate} to {booking.endDate}</td>
-                    <td style={{ padding: "0.5rem" }}>{booking.bookingStatus}</td>
-                    <td style={{ padding: "0.5rem" }}>
-                      {booking.bookingStatus === 'ACTIVE' && (
-                        <button onClick={() => cancelBooking(booking.id)} style={{ ...buttonStyle, padding: "0.4rem 1rem" }}>
-                          Cancel
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
         </section>
       </div>
     </main>
