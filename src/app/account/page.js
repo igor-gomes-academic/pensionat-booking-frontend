@@ -60,7 +60,7 @@ export default function AccountPage() {
     try {
       const response = await fetch(`${API_BASE_URL}/bookings`)
       const data = await response.json()
-      setBookings(data.filter(b => b.customer?.id === customerId))
+      setBookings(data.filter(b => b.customerId === customerId))
     } catch (err) {
       setError(err.message)
     }
@@ -83,7 +83,7 @@ async function handleUpdate(e) {
       const updated = await response.json()
       localStorage.setItem('customer', JSON.stringify(updated))
       setCustomer(updated)
-      setUpdateForm({          // ← change is here
+      setUpdateForm({
         firstName: updated.firstName,
         lastName: updated.lastName,
         email: updated.email,
@@ -174,12 +174,12 @@ async function handleUpdate(e) {
               <tbody>
                 {bookings.map(booking => (
                   <tr key={booking.id}>
-                    <td style={{ padding: "0.5rem" }}>Room {booking.room?.roomNumber}</td>
+                    <td style={{ padding: "0.5rem" }}>Room {booking.roomNumber}</td>
                     <td style={{ padding: "0.5rem" }}>{booking.startDate}</td>
                     <td style={{ padding: "0.5rem" }}>{booking.endDate}</td>
-                    <td style={{ padding: "0.5rem" }}>{booking.bookingStatus}</td>
+                    <td style={{ padding: "0.5rem" }}>{booking.status}</td>
                     <td style={{ padding: "0.5rem" }}>
-                      {booking.bookingStatus === 'ACTIVE' && (
+                      {booking.status === 'ACTIVE' && (
                         <button onClick={() => cancelBooking(booking.id)} style={{ ...buttonStyle, padding: "0.4rem 1rem" }}>
                           Cancel
                         </button>
