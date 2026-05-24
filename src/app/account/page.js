@@ -117,6 +117,37 @@ async function handleUpdate(e) {
     }
   }
 
+  async function handleDeleteAccount() {
+    const hasActiveBooking = bookings.some(booking => booking.status === 'ACTIVE')
+
+    if (hasActiveBooking) {
+      setMessage('')
+      setError('Customer cannot be deleted with an active booking')
+      return
+    }
+
+    const confirmed = window.confirm('Are you sure you want to delete your account? All your data will be permanently removed and cannot be recovered.')
+
+    if (!confirmed) return
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/customers/${customer.id}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        const message = await response.text()
+        throw new Error(message || 'Failed to delete account')
+      }
+
+      localStorage.removeItem('customer')
+      window.location.href = '/'
+    } catch (err) {
+      setMessage('')
+      setError(err.message)
+    }
+  }
+
   async function cancelBooking(id) {
     try {
       const response = await fetch(`${API_BASE_URL}/bookings/${id}/cancel`, {
@@ -198,6 +229,12 @@ async function handleUpdate(e) {
               <p><strong>Last Name:</strong> {customer.lastName}</p>
               <p><strong>Email:</strong> {customer.email}</p>
               <p><strong>Phone:</strong> {customer.phoneNumber}</p>
+              <button
+                onClick={handleDeleteAccount}
+                style={{ ...buttonStyle, backgroundColor: "#b00020", width: "300px" }}
+              >
+                Delete Account
+              </button>
             </div>
           )}
 
