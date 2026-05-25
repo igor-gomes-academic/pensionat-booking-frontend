@@ -2,6 +2,7 @@
 
 import Navbar from "../components/Navbar"
 import { useEffect, useState } from 'react'
+import { useSearchParams } from "next/navigation"
 
 const API_BASE_URL = 'http://localhost:8080/api'
 
@@ -23,6 +24,8 @@ const buttonStyle = {
 }
 
 export default function BookingsPage() {
+  const searchParams = useSearchParams()
+
   const [rooms, setRooms] = useState([])
   const [customers, setCustomers] = useState([])
   const [currentCustomer, setCurrentCustomer] = useState(null)
@@ -38,6 +41,7 @@ export default function BookingsPage() {
 
   useEffect(() => {
     const storedCustomer = localStorage.getItem('customer')
+    const roomIdFromUrl = searchParams.get('roomId')
 
     if (storedCustomer) {
       const customer = JSON.parse(storedCustomer)
@@ -45,6 +49,7 @@ export default function BookingsPage() {
       setBookingForm((previousForm) => ({
         ...previousForm,
         customerId: customer.id,
+        roomId: roomIdFromUrl || '',
       }))
     }
 
@@ -150,6 +155,7 @@ export default function BookingsPage() {
 
             <select
               value={bookingForm.roomId}
+              disabled={!!searchParams.get('roomId')}
               onChange={(e) => setBookingForm({ ...bookingForm, roomId: e.target.value })}
               style={inputStyle}
             >
