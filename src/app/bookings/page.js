@@ -167,8 +167,33 @@ export default function BookingsPage() {
               ))}
             </select>
 
-            <input type="date" value={bookingForm.startDate} onChange={(e) => setBookingForm({ ...bookingForm, startDate: e.target.value })} style={inputStyle} />
-            <input type="date" value={bookingForm.endDate} onChange={(e) => setBookingForm({ ...bookingForm, endDate: e.target.value })} style={inputStyle} />
+            <input type="date" 
+            value={bookingForm.startDate} 
+            min={new Date().toISOString().split("T")[0]}
+            onChange={(e) => {
+              const newStartDate = e.target.value
+
+              setBookingForm({ 
+                ...bookingForm, 
+                startDate: newStartDate, 
+                endDate: 
+                bookingForm.endDate && bookingForm.endDate <= newStartDate
+                ? ""
+                : bookingForm.endDate, 
+              })
+            }}
+            style = {inputStyle}
+            />
+
+            <input type="date" 
+            value={bookingForm.endDate}
+            min={bookingForm.startDate || new Date().toISOString().split("T")[0]}
+            onChange={(e) => setBookingForm({ 
+              ...bookingForm, 
+              endDate: e.target.value 
+              })} 
+              style={inputStyle} 
+              />
 
             <button type="submit" style={buttonStyle}>
               Create booking
