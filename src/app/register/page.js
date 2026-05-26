@@ -1,6 +1,7 @@
 "use client";
 
 import Navbar from "../components/Navbar";
+import HeroBanner from "../components/HeroBanner";
 import { useState } from "react";
 
 export default function RegisterPage() {
@@ -34,6 +35,7 @@ export default function RegisterPage() {
   return (
     <main>
       <Navbar />
+      <HeroBanner />
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "2rem" }}>
         <h1>Create Account</h1>
         <input type="text" name="firstName" placeholder="First Name" onChange={handleChange} style={{ padding: "0.5rem", margin: "0.5rem", width: "300px", backgroundColor: "grey" }} />
