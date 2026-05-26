@@ -46,6 +46,7 @@ export default function AccountPage() {
     roomId: '',
     startDate: '',
     endDate: '',
+    extraBed: false,
   })
 
   useEffect(() => {
@@ -174,6 +175,7 @@ async function handleUpdate(e) {
       roomId: matchedRoom?.id || booking.room?.id || '',
       startDate: booking.startDate,
       endDate: booking.endDate,
+      extraBed: booking.extraBed || false,
     })
   }
 
@@ -189,6 +191,7 @@ async function handleUpdate(e) {
           roomId: Number(updateBookingForm.roomId),
           startDate: updateBookingForm.startDate,
           endDate: updateBookingForm.endDate,
+          extraBed: updateBookingForm.extraBed,
         }),
       })
 
@@ -207,6 +210,10 @@ async function handleUpdate(e) {
   }
 
   if (!customer) return null
+
+    const selectedUpdateRoom = rooms.find(
+      room => Number(room.id) === Number(updateBookingForm.roomId)
+    )
 
   return (
     <main>
@@ -296,6 +303,7 @@ async function handleUpdate(e) {
                   <th style={{ textAlign: "left", padding: "0.5rem" }}>Check-in</th>
                   <th style={{ textAlign: "left", padding: "0.5rem" }}>Check-out</th>
                   <th style={{ textAlign: "left", padding: "0.5rem" }}>Status</th>
+                  <th style={{ textAlign: "left", padding: "0.5rem" }}>Extra Bed</th>
                   <th style={{ textAlign: "left", padding: "0.5rem" }}>Action</th>
                 </tr>
               </thead>
@@ -306,6 +314,7 @@ async function handleUpdate(e) {
                     <td style={{ padding: "0.5rem" }}>{booking.startDate}</td>
                     <td style={{ padding: "0.5rem" }}>{booking.endDate}</td>
                     <td style={{ padding: "0.5rem" }}>{booking.status}</td>
+                    <td style={{ padding: "0.5rem" }}>{booking.extraBed ? "Yes" : "No"}</td>
                     <td style={{ padding: "0.5rem" }}>
                       {booking.status === 'ACTIVE' && (
                         <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -338,9 +347,24 @@ async function handleUpdate(e) {
             >
               <select
                 value={updateBookingForm.roomId}
-                onChange={(e) =>
-                  setUpdateBookingForm({ ...updateBookingForm, roomId: e.target.value })
-                }
+                onChange={(e) => {
+                  const selectedRoomId = e.target.value
+
+                  const room = rooms.find(
+                    r => Number(r.id) === Number(selectedRoomId)
+                  )
+
+                  setUpdateBookingForm({
+                    ...updateBookingForm, 
+                    roomId: selectedRoomId, 
+                    extraBed:
+                      room?.roomType === "DOUBLE"
+                      ? updateBookingForm.extraBed
+                      : false
+                  })
+                
+                }}
+
                 style={inputStyle}
               >
                 <option value="">Select room</option>
@@ -350,6 +374,31 @@ async function handleUpdate(e) {
                   </option>
                 ))}
               </select>
+
+              {selectedUpdateRoom?.roomType === "DOUBLE" && (
+                <label
+                  style={{
+                    display: "flex", 
+                    alignItems: "center", 
+                    gap: "0.5rem", 
+                    color: "#1f2937", 
+                    minWidth: "140px"
+                  }}
+
+                  >
+                    <input
+                      type="checkbox"
+                      checked={updateBookingForm.extraBed}
+                      onChange={(e) =>
+                        setUpdateBookingForm({
+                          ...updateBookingForm, 
+                          extraBed: e.target.checked
+                        })
+                      }
+                      />
+                      Extra bed
+                      </label> 
+          )}
 
               <input
                 type="date"
