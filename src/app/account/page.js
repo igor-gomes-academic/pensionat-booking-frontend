@@ -212,35 +212,64 @@ async function handleUpdate(e) {
     <main>
       <Navbar />
       <HeroBanner />
-      <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <h1>My Account</h1>
+      <div style={{ 
+        padding: "1rem 2rem 2rem 2rem", 
+        maxWidth: "800px", 
+        margin: "0 auto", 
+        display: "flex", 
+        flexDirection: "column", 
+        alignItems: "center" }}>
+        <h1 style={{
+          fontSize: "2.5rem", 
+          fontWeight: "700", 
+          marginBottom: "1rem", 
+          marginTop: "0.5rem",
+          color: "#1f2937"
+        }} >
+          My Account
+          </h1>
 
         {message && <p style={{ color: "green" }}>{message}</p>}
         {error && <p style={{ color: "red" }}>{error}</p>}
 
         <section style={{ marginBottom: "2rem" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-            <h2>Personal Information</h2>
-            <button
-              onClick={() => setShowEditForm(!showEditForm)}
-              style={buttonStyle}>
-              {showEditForm ? "Cancel" : "Edit Information"}
-            </button>
-          </div>
+            <h2 style={{
+              marginBottom: "0.5rem",
+              marginTop: "0.5rem", 
+              fontWeight: "600", 
+              color: "#1f2937"
+            }}>
+              Personal Information</h2>
+            </div>
 
-          {!showEditForm && (
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-              <p><strong>First Name:</strong> {customer.firstName}</p>
-              <p><strong>Last Name:</strong> {customer.lastName}</p>
-              <p><strong>Email:</strong> {customer.email}</p>
-              <p><strong>Phone:</strong> {customer.phoneNumber}</p>
-              <button
-                onClick={handleDeleteAccount}
-                style={{ ...buttonStyle, backgroundColor: "#b00020", width: "300px" }}
+            {!showEditForm && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <p><strong>First Name:</strong> {customer.firstName}</p>
+                <p><strong>Last Name:</strong> {customer.lastName}</p>
+                <p><strong>Email:</strong> {customer.email}</p>
+                <p><strong>Phone:</strong> {customer.phoneNumber}</p>
+
+                <div style={{ display: "flex", gap: "1rem", marginTop: "1rem"}}>
+                  <button
+                  onClick={() => setShowEditForm(true)}
+                  style={buttonStyle}
+                  >
+                    Edit Information
+                    </button>
+
+            <button
+              onClick={handleDeleteAccount}
+              style={{
+                ...buttonStyle,
+                backgroundColor: "#b00020"
+              }}
               >
                 Delete Account
-              </button>
-            </div>
+                </button>
+          </div>
+          </div>
+              
           )}
 
           {showEditForm && (
