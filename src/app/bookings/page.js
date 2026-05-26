@@ -36,10 +36,11 @@ export default function BookingsPage() {
   const [error, setError] = useState('')
 
   const [bookingForm, setBookingForm] = useState({
-    customerId: '',
-    roomId: '',
+    customerId: customers.id,
+    roomId: rooms.id,
     startDate: '',
     endDate: '',
+    extraBed: false
   })
 
   useEffect(() => {
@@ -102,6 +103,7 @@ export default function BookingsPage() {
           roomId: Number(bookingForm.roomId),
           startDate: bookingForm.startDate,
           endDate: bookingForm.endDate,
+          extraBed: bookingForm.extraBed
         }),
       })
 
@@ -110,6 +112,7 @@ export default function BookingsPage() {
         roomId: '',
         startDate: '',
         endDate: '',
+        extraBed: false
       })
 
       setMessage('Booking created successfully')
@@ -118,6 +121,9 @@ export default function BookingsPage() {
       setError(err.message)
     }
   }
+      const selectedRoom = rooms.find(
+        room => Number(room.id) === Number(bookingForm.roomId)
+      )
 
   return (
     <main>
@@ -159,7 +165,22 @@ export default function BookingsPage() {
             <select
               value={bookingForm.roomId}
               disabled={!!searchParams.get('roomId')}
-              onChange={(e) => setBookingForm({ ...bookingForm, roomId: e.target.value })}
+              onChange={(e) => {
+                const selectedRoomId = e.target.value
+
+                const room = rooms.find(
+                  r => Number(r.id) === Number(selectedRoomId)
+                )
+
+                setBookingForm({
+                  ...bookingForm, 
+                  roomId: selectedRoomId, 
+                  extraBed:
+                    room?.roomType === "DOUBLE"
+                    ? bookingForm.extraBed
+                    : false
+                })
+              }}
               style={inputStyle}
             >
               <option value="">Select room</option>
@@ -169,6 +190,30 @@ export default function BookingsPage() {
                 </option>
               ))}
             </select>
+
+            {selectedRoom?.roomType === "DOUBLE" && (
+              <label
+              style={{
+                display: "flex", 
+                alignItems: "center", 
+                gap: "0.5rem", 
+                color: "#1f2937",
+                minWidth: "140px"
+              }}
+              >
+                <input
+                  type="checkbox"
+                  checked={bookingForm.extraBed}
+                  onChange={(e) =>
+                    setBookingForm({
+                      ...bookingForm, 
+                      extraBed: e.target.checked
+                    })
+                  }
+                  />
+                  Extra bed
+                  </label>
+            )}
 
             <input type="date" 
             value={bookingForm.startDate} 
