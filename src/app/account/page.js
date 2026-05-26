@@ -165,9 +165,11 @@ async function handleUpdate(e) {
   }
 
   function startEditBooking(booking) {
+    const matchedRoom = rooms.find(r => r.id === booking.roomId)
+
     setEditBookingId(booking.id)
     setUpdateBookingForm({
-      roomId: booking.room?.id || '',
+      roomId: matchedRoom?.id || booking.room?.id || '',
       startDate: booking.startDate,
       endDate: booking.endDate,
     })
