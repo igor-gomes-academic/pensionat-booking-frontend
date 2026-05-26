@@ -15,7 +15,7 @@ const inputStyle = {
 }
 
 const buttonStyle = {
-  backgroundColor: "#333",
+  backgroundColor: "#2f4156",
   color: "white",
   padding: "0.5rem 2rem",
   border: "none",
