@@ -1,6 +1,7 @@
 'use client'
 
 import Navbar from "../components/Navbar"
+import HeroBanner from "../components/HeroBanner"
 import { useEffect, useState } from 'react'
 
 const API_BASE_URL = 'http://localhost:8080/api'
@@ -11,7 +12,8 @@ const inputStyle = {
   color: "#222",
   border: "1px solid #ccc",
   borderRadius: "4px",
-  width: "300px"
+  width: "300px",
+  height: "47px"
 }
 
 const buttonStyle = {
@@ -209,6 +211,7 @@ async function handleUpdate(e) {
   return (
     <main>
       <Navbar />
+      <HeroBanner />
       <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "center" }}>
         <h1>My Account</h1>
 

@@ -1,6 +1,7 @@
 'use client'
 
 import Navbar from "../components/Navbar"
+import HeroBanner from "../components/HeroBanner"
 import { useEffect, useState } from 'react'
 import { useSearchParams } from "next/navigation"
 
@@ -12,6 +13,8 @@ const inputStyle = {
   color: "#222",
   border: "1px solid #ccc",
   borderRadius: "4px",
+  height: "47px",
+  width: "150px"
 }
 
 const buttonStyle = {
@@ -119,19 +122,19 @@ export default function BookingsPage() {
   return (
     <main>
       <Navbar />
-
+      <HeroBanner />
       <div style={{ padding: "2rem" }}>
-        <h1 style={{ textAlign: "center", marginBottom: "2rem" }}>
+        <h1 style={{ textAlign: "center", marginBottom: "2rem",alignItems: "center" }}>
           Bookings
         </h1>
 
         {message && <p style={{ color: "green", textAlign: "center" }}>{message}</p>}
         {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
 
-        <section style={{ marginBottom: "2rem" }}>
+        <section style={{ marginBottom: "2rem", display: "flex", alignItems:"center", justifyContent:"center", gap:"1rem" }}>
           <h2>Create booking</h2>
 
-          <form onSubmit={createBooking} style={{ display: "flex", gap: "1rem", flexWrap: "wrap", alignItems: "center" }}>
+          <form onSubmit={createBooking} style={{ display: "flex", gap: "1rem", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
             {currentCustomer ? (
               <input
                 value={`${currentCustomer.firstName} ${currentCustomer.lastName}`}

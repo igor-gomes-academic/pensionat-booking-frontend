@@ -1,6 +1,7 @@
 "use client";
 
 import Navbar from "../components/Navbar";
+import HeroBanner from "../components/HeroBanner";
 import { useState } from "react";
 
 export default function LoginPage() {
@@ -26,6 +27,7 @@ export default function LoginPage() {
   return (
     <main>
       <Navbar />
+      <HeroBanner />
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "2rem" }}>
         <h1>Login</h1>
         <input type="email" placeholder="Email" onChange={e => setEmail(e.target.value)} style={{ padding: "0.5rem", margin: "0.5rem", width: "300px" , backgroundColor: "grey" }} />
