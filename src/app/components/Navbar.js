@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 
+const navColor = "#2f4156";
+
 export default function Navbar() {
   const [customer, setCustomer] = useState(null);
 
@@ -17,32 +19,73 @@ export default function Navbar() {
     window.location.href = "/";
   };
 
+  const navButtonStyle = {
+    color: "white", 
+    textDecoration: "none", 
+    border: "1 px solid white", 
+    padding: "0.3rem 1rem", 
+    cursor: "pointer", 
+    display: "inline-block", 
+    background: "none",
+  };
+
   return (
     <nav style={{
           display: "flex", 
           justifyContent: "space-between", 
           alignItems: "center", 
-          padding: "1rem", 
-          backgroundColor: "#2f4156", 
-          boxShadow: "0 2px 10px rgba(0, 0, 0, 0.15" 
+          padding: "1rem 2rem", 
+          backgroundColor: navColor, 
+          boxShadow: "0 2px 10px rgba(0, 0, 0, 0.15)" 
           }}
           >
 
-      <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-        <h1 style={{ color: "white", margin: 0 }}>Pensionat</h1>
-        <a href="/" style={{ color: "white", textDecoration: "none", border: "1px solid white", padding: "0.3rem 1rem", cursor: "pointer" }}>Home</a>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <a href="/" style={navButtonStyle}>
+        Home
+        </a>
       </div>
-      <div>
+
+      <div style={{
+        position: "absolute", 
+        left: "50%", 
+        transform: "translateX(-50%)",
+      }}>
+
+        <h1
+        style={{
+          color: "white", 
+          margin: 0,
+          fontSize: "1.8rem", 
+          fontWeight: "700", 
+          letterSpacing: "1px",
+        }} 
+        >
+          Ocean View Lodge
+        </h1>
+        </div>
+        
+        <div>
         {customer ? (
           <>
-            <span style={{ color: "white", marginRight: "1rem" }}>Hello, {customer.firstName}!</span>
-            <a href="/account" style={{ color: "white", textDecoration: "none", marginRight: "3rem", border: "1px solid white", padding: "0.3rem 1rem", cursor: "pointer", display: "inline-block" }}>Account</a>
-            <button onClick={handleLogout} style={{ color: "white", background: "none", border: "1px solid white", padding: "0.3rem 1rem", cursor: "pointer" }}>
+            <span style={{ color: "white", marginRight: "1rem" }}>
+              Hello, {customer.firstName}!
+              </span>
+
+            <a 
+              href="/account" 
+              style={{ ...navButtonStyle, marginRight: "1rem"}}>
+                Account
+                </a>
+
+            <button onClick={handleLogout} style={navButtonStyle}>
               Logout
             </button>
           </>
         ) : (
-          <a href="/login" style={{ color: "white", textDecoration: "none", border: "1px solid white", padding: "0.3rem 1rem", cursor: "pointer",display: "inline-block" }}>Login</a>
+          <a href="/login" style={navButtonStyle}>
+            Login
+            </a>
         )}
       </div>
     </nav>

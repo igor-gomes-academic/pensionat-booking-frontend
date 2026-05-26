@@ -30,9 +30,38 @@ export default function LoginPage() {
       <HeroBanner />
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "2rem" }}>
         <h1>Login</h1>
-        <input type="email" placeholder="Email" onChange={e => setEmail(e.target.value)} style={{ padding: "0.5rem", margin: "0.5rem", width: "300px" , backgroundColor: "grey" }} />
-        <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} style={{ padding: "0.5rem", margin: "0.5rem", width: "300px" , backgroundColor: "grey" }} />
-        <button onClick={handleLogin} style={{ backgroundColor: "#333", color: "white", padding: "0.5rem 2rem", border: "none", borderRadius: "4px", cursor: "pointer", marginTop: "1rem" }}>
+        <input type="email" placeholder="Email" onChange={e => setEmail(e.target.value)} 
+        style={{ 
+          padding: "0.5rem", 
+          margin: "0.5rem", 
+          width: "300px" , 
+          backgroundColor: "#f5f5f5",
+          color: "#222",
+          border: "1px solid #ccc",
+          borderRadius: "4px"
+           }} 
+           />
+
+        <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} 
+        style={{ 
+          padding: "0.5rem", 
+          margin: "0.5rem", 
+          width: "300px" , 
+          backgroundColor: "#f5f5f5",
+          color: "#222",
+          border: "1px solid #ccc",
+          borderRadius: "4px"
+           }} />
+        <button onClick={handleLogin} 
+        style={{ 
+          backgroundColor: "#2f4156", 
+          color: "white", 
+          padding: "0.5rem 2rem", 
+          border: "none", 
+          borderRadius: "4px", 
+          cursor: "pointer", 
+          marginTop: "1rem" 
+          }}>
           Login
         </button>
         <p>Don't have an account? <a href="/register">Register</a></p>
