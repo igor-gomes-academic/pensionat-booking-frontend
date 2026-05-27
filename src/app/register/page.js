@@ -56,8 +56,7 @@ export default function RegisterPage() {
           backgroundColor: "white",
           color: "#222",
           border: "1px solid #ccc",
-          borderRadius: "6px", 
-          backgroundColor: "grey" 
+          borderRadius: "6px",  
           }} />
         <input type="email" name="email" placeholder="Email" onChange={handleChange} 
         style={{ 
