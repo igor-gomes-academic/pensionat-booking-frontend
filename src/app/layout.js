@@ -13,7 +13,8 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "Ocean View Lodge",
-  description: "Book your stay at Ocean View Lodge - Comfortable rooms with stunning views. Easy online booking available.",
+  description:
+    "Book your stay at Ocean View Lodge - Comfortable rooms with stunning views. Easy online booking available.",
 };
 
 export default function RootLayout({ children }) {

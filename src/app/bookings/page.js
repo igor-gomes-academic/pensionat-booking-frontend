@@ -1,11 +1,11 @@
-'use client'
+"use client";
 
-import Navbar from "../components/Navbar"
-import HeroBanner from "../components/HeroBanner"
-import { useEffect, useState } from 'react'
-import { useSearchParams } from "next/navigation"
+import Navbar from "../components/Navbar";
+import HeroBanner from "../components/HeroBanner";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
-const API_BASE_URL = 'http://localhost:8080/api'
+const API_BASE_URL = "http://localhost:8080/api";
 
 const inputStyle = {
   padding: "0.5rem",
@@ -14,8 +14,8 @@ const inputStyle = {
   border: "1px solid #ccc",
   borderRadius: "4px",
   height: "47px",
-  width: "150px"
-}
+  width: "150px",
+};
 
 const buttonStyle = {
   backgroundColor: "#2f4156",
@@ -24,123 +24,148 @@ const buttonStyle = {
   border: "none",
   borderRadius: "4px",
   cursor: "pointer",
-}
+};
 
 export default function BookingsPage() {
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
 
-  const [rooms, setRooms] = useState([])
-  const [customers, setCustomers] = useState([])
-  const [currentCustomer, setCurrentCustomer] = useState(null)
-  const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
+  const [rooms, setRooms] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [currentCustomer, setCurrentCustomer] = useState(null);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   const [bookingForm, setBookingForm] = useState({
     customerId: customers.id,
     roomId: rooms.id,
-    startDate: '',
-    endDate: '',
-    extraBed: false
-  })
+    startDate: "",
+    endDate: "",
+    extraBed: false,
+  });
 
   useEffect(() => {
-    const storedCustomer = localStorage.getItem('customer')
-    const roomIdFromUrl = searchParams.get('roomId')
+    const storedCustomer = localStorage.getItem("customer");
+    const roomIdFromUrl = searchParams.get("roomId");
 
     if (storedCustomer) {
-      const customer = JSON.parse(storedCustomer)
-      setCurrentCustomer(customer)
+      const customer = JSON.parse(storedCustomer);
+      setCurrentCustomer(customer);
       setBookingForm((previousForm) => ({
         ...previousForm,
         customerId: customer.id,
-        roomId: roomIdFromUrl || '',
-      }))
+        roomId: roomIdFromUrl || "",
+      }));
     }
 
-    loadData()
-  }, [])
+    loadData();
+  }, []);
 
   async function apiRequest(path, options = {}) {
     const response = await fetch(`${API_BASE_URL}${path}`, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...options.headers,
       },
       ...options,
-    })
+    });
 
     if (!response.ok) {
-      const message = await response.text()
-      throw new Error(message || 'Request failed')
+      const message = await response.text();
+      throw new Error(message || "Request failed");
     }
 
-    return response.json()
+    return response.json();
   }
 
   async function loadData() {
     try {
       const [roomsData, customersData] = await Promise.all([
-        apiRequest('/rooms'),
-        apiRequest('/customers'),
-      ])
+        apiRequest("/rooms"),
+        apiRequest("/customers"),
+      ]);
 
-      setRooms(roomsData)
-      setCustomers(customersData)
-      setError('')
+      setRooms(roomsData);
+      setCustomers(customersData);
+      setError("");
     } catch (err) {
-      setError(err.message)
+      setError(err.message);
     }
   }
 
   async function createBooking(event) {
-    event.preventDefault()
+    event.preventDefault();
 
     try {
-      await apiRequest('/bookings', {
-        method: 'POST',
+      await apiRequest("/bookings", {
+        method: "POST",
         body: JSON.stringify({
           customerId: Number(bookingForm.customerId),
           roomId: Number(bookingForm.roomId),
           startDate: bookingForm.startDate,
           endDate: bookingForm.endDate,
-          extraBed: bookingForm.extraBed
+          extraBed: bookingForm.extraBed,
         }),
-      })
+      });
 
       setBookingForm({
-        customerId: currentCustomer ? currentCustomer.id : '',
-        roomId: '',
-        startDate: '',
-        endDate: '',
-        extraBed: false
-      })
+        customerId: currentCustomer ? currentCustomer.id : "",
+        roomId: "",
+        startDate: "",
+        endDate: "",
+        extraBed: false,
+      });
 
-      setMessage('Booking created successfully')
-      setError('')
+      setMessage("Booking created successfully");
+      setError("");
     } catch (err) {
-      setError(err.message)
+      setError(err.message);
     }
   }
-      const selectedRoom = rooms.find(
-        room => Number(room.id) === Number(bookingForm.roomId)
-      )
+  const selectedRoom = rooms.find(
+    (room) => Number(room.id) === Number(bookingForm.roomId),
+  );
 
   return (
     <main>
       <Navbar />
       <HeroBanner />
       <div style={{ padding: "2rem" }}>
-        <h1 style={{ textAlign: "center", marginBottom: "2rem",alignItems: "center" }}>
+        <h1
+          style={{
+            textAlign: "center",
+            marginBottom: "2rem",
+            alignItems: "center",
+          }}
+        >
           Bookings
         </h1>
 
-        {message && <p style={{ color: "green", textAlign: "center" }}>{message}</p>}
+        {message && (
+          <p style={{ color: "green", textAlign: "center" }}>{message}</p>
+        )}
         {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
 
-        <section style={{ marginBottom: "2rem", display: "flex", alignItems:"center", justifyContent:"center", gap:"1rem" }}>
+        <section
+          style={{
+            marginBottom: "2rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "1rem",
+          }}
+        >
           <h2>Create booking</h2>
 
-          <form onSubmit={createBooking} style={{ display: "flex", gap: "1rem", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
+          <form
+            onSubmit={createBooking}
+            style={{
+              display: "flex",
+              gap: "1rem",
+              flexWrap: "wrap",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             {currentCustomer ? (
               <input
                 value={`${currentCustomer.firstName} ${currentCustomer.lastName}`}
@@ -150,7 +175,9 @@ export default function BookingsPage() {
             ) : (
               <select
                 value={bookingForm.customerId}
-                onChange={(e) => setBookingForm({ ...bookingForm, customerId: e.target.value })}
+                onChange={(e) =>
+                  setBookingForm({ ...bookingForm, customerId: e.target.value })
+                }
                 style={inputStyle}
               >
                 <option value="">Select customer</option>
@@ -164,22 +191,20 @@ export default function BookingsPage() {
 
             <select
               value={bookingForm.roomId}
-              disabled={!!searchParams.get('roomId')}
+              disabled={!!searchParams.get("roomId")}
               onChange={(e) => {
-                const selectedRoomId = e.target.value
+                const selectedRoomId = e.target.value;
 
                 const room = rooms.find(
-                  r => Number(r.id) === Number(selectedRoomId)
-                )
+                  (r) => Number(r.id) === Number(selectedRoomId),
+                );
 
                 setBookingForm({
-                  ...bookingForm, 
-                  roomId: selectedRoomId, 
+                  ...bookingForm,
+                  roomId: selectedRoomId,
                   extraBed:
-                    room?.roomType === "DOUBLE"
-                    ? bookingForm.extraBed
-                    : false
-                })
+                    room?.roomType === "DOUBLE" ? bookingForm.extraBed : false,
+                });
               }}
               style={inputStyle}
             >
@@ -193,55 +218,61 @@ export default function BookingsPage() {
 
             {selectedRoom?.roomType === "DOUBLE" && (
               <label
-              style={{
-                display: "flex", 
-                alignItems: "center", 
-                gap: "0.5rem", 
-                color: "#1f2937",
-                minWidth: "140px"
-              }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  color: "#1f2937",
+                  minWidth: "140px",
+                }}
               >
                 <input
                   type="checkbox"
                   checked={bookingForm.extraBed}
                   onChange={(e) =>
                     setBookingForm({
-                      ...bookingForm, 
-                      extraBed: e.target.checked
+                      ...bookingForm,
+                      extraBed: e.target.checked,
                     })
                   }
-                  />
-                  Extra bed
-                  </label>
+                />
+                Extra bed
+              </label>
             )}
 
-            <input type="date" 
-            value={bookingForm.startDate} 
-            min={new Date().toISOString().split("T")[0]}
-            onChange={(e) => {
-              const newStartDate = e.target.value
+            <input
+              type="date"
+              value={bookingForm.startDate}
+              min={new Date().toISOString().split("T")[0]}
+              onChange={(e) => {
+                const newStartDate = e.target.value;
 
-              setBookingForm({ 
-                ...bookingForm, 
-                startDate: newStartDate, 
-                endDate: 
-                bookingForm.endDate && bookingForm.endDate <= newStartDate
-                ? ""
-                : bookingForm.endDate, 
-              })
-            }}
-            style = {inputStyle}
+                setBookingForm({
+                  ...bookingForm,
+                  startDate: newStartDate,
+                  endDate:
+                    bookingForm.endDate && bookingForm.endDate <= newStartDate
+                      ? ""
+                      : bookingForm.endDate,
+                });
+              }}
+              style={inputStyle}
             />
 
-            <input type="date" 
-            value={bookingForm.endDate}
-            min={bookingForm.startDate || new Date().toISOString().split("T")[0]}
-            onChange={(e) => setBookingForm({ 
-              ...bookingForm, 
-              endDate: e.target.value 
-              })} 
-              style={inputStyle} 
-              />
+            <input
+              type="date"
+              value={bookingForm.endDate}
+              min={
+                bookingForm.startDate || new Date().toISOString().split("T")[0]
+              }
+              onChange={(e) =>
+                setBookingForm({
+                  ...bookingForm,
+                  endDate: e.target.value,
+                })
+              }
+              style={inputStyle}
+            />
 
             <button type="submit" style={buttonStyle}>
               Create booking
@@ -250,5 +281,5 @@ export default function BookingsPage() {
         </section>
       </div>
     </main>
-  )
+  );
 }

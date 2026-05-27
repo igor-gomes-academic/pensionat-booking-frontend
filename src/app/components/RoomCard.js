@@ -44,9 +44,9 @@ export default function RoomCard({
       >
         <h2 style={{ color: "#666" }}>Room {roomNumber}</h2>
 
-        <p style ={{color: "#666"}}>{type}</p>
+        <p style={{ color: "#666" }}>{type}</p>
 
-        <p style ={{color: "#666"}}>{price} SEK / night</p>
+        <p style={{ color: "#666" }}>{price} SEK / night</p>
 
         <p style={{ fontSize: "0.85rem", color: "#666" }}>{description}</p>
 
