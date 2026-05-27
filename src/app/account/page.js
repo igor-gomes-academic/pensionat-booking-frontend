@@ -2,6 +2,7 @@
 
 import Navbar from "../components/Navbar"
 import HeroBanner from "../components/HeroBanner"
+import Footer from "../components/Footer"
 import { useEffect, useState } from 'react'
 
 const API_BASE_URL = 'http://localhost:8080/api'
@@ -433,6 +434,7 @@ async function handleUpdate(e) {
           )}
         </section>
       </div>
+      <Footer />
     </main>
   )
 }

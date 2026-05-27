@@ -3,6 +3,7 @@
 import HeroBanner from "./components/HeroBanner";
 import Navbar from "./components/Navbar";
 import RoomCard from "./components/RoomCard";
+import Footer from "./components/Footer";
 import { useState, useEffect } from "react";
 
 const inputStyle = {
@@ -144,6 +145,7 @@ export default function HomePage() {
           />
         ))}
       </div>
+    <Footer />
     </main>
   );
 }

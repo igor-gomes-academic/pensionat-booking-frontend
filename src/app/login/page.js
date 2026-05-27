@@ -2,6 +2,7 @@
 
 import Navbar from "../components/Navbar";
 import HeroBanner from "../components/HeroBanner";
+import Footer from "../components/Footer"
 import { useState } from "react";
 
 export default function LoginPage() {
@@ -66,6 +67,7 @@ export default function LoginPage() {
         </button>
         <p>Don't have an account? <a href="/register">Register</a></p>
       </div>
+      <Footer />
     </main>
   );
 }

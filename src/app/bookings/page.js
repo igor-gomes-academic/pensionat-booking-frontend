@@ -2,6 +2,7 @@
 
 import Navbar from "../components/Navbar"
 import HeroBanner from "../components/HeroBanner"
+import Footer from "../components/Footer"
 import { useEffect, useState } from 'react'
 import { useSearchParams } from "next/navigation"
 
@@ -126,10 +127,14 @@ export default function BookingsPage() {
       )
 
   return (
-    <main>
+    <main style={{
+      display: "flex",
+      flexDirection:"column",
+      minHeight: "100vh",
+    }}>
       <Navbar />
       <HeroBanner />
-      <div style={{ padding: "2rem" }}>
+      <div style={{ flex: 1, padding: "2rem" }}>
         <h1 style={{ textAlign: "center", marginBottom: "2rem",alignItems: "center" }}>
           Bookings
         </h1>
@@ -249,6 +254,7 @@ export default function BookingsPage() {
           </form>
         </section>
       </div>
+    <Footer />
     </main>
   )
 }
