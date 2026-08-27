@@ -4,7 +4,8 @@ import Navbar from "../components/Navbar";
 import HeroBanner from "../components/HeroBanner";
 import { useEffect, useState } from "react";
 
-const API_BASE_URL = "http://localhost:8080/api";
+const API_BOOKING_URL = "http://localhost:8080/api";
+const API_CUSTOMER_URL = "http://localhost:8081/api";
 
 const inputStyle = {
   padding: "0.5rem",
@@ -70,7 +71,7 @@ export default function AccountPage() {
 
   async function loadBookings(customerId) {
     try {
-      const response = await fetch(`${API_BASE_URL}/bookings`);
+      const response = await fetch(`${API_BOOKING_URL}/bookings`);
       const data = await response.json();
       setBookings(data.filter((b) => b.customerId === customerId));
     } catch (err) {
@@ -80,7 +81,7 @@ export default function AccountPage() {
 
   async function loadRooms() {
     try {
-      const response = await fetch(`${API_BASE_URL}/rooms`);
+      const response = await fetch(`${API_BOOKING_URL}/rooms`);
       const data = await response.json();
       setRooms(data);
     } catch (err) {
@@ -91,7 +92,7 @@ export default function AccountPage() {
   async function handleUpdate(e) {
     e.preventDefault();
     try {
-      const response = await fetch(`${API_BASE_URL}/customers/${customer.id}`, {
+      const response = await fetch(`${API_CUSTOMER_URL}/customers/${customer.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updateForm),
@@ -138,7 +139,7 @@ export default function AccountPage() {
     if (!confirmed) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/customers/${customer.id}`, {
+      const response = await fetch(`${API_CUSTOMER_URL}/customers/${customer.id}`, {
         method: "DELETE",
       });
 
@@ -157,7 +158,7 @@ export default function AccountPage() {
 
   async function cancelBooking(id) {
     try {
-      const response = await fetch(`${API_BASE_URL}/bookings/${id}/cancel`, {
+      const response = await fetch(`${API_BOOKING_URL}/bookings/${id}/cancel`, {
         method: "PATCH",
       });
 
@@ -188,7 +189,7 @@ export default function AccountPage() {
 
     try {
       const response = await fetch(
-        `${API_BASE_URL}/bookings/${editBookingId}`,
+        `${API_BOOKING_URL}/bookings/${editBookingId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
