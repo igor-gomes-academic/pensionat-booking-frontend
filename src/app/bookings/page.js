@@ -5,7 +5,8 @@ import HeroBanner from "../components/HeroBanner";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-const API_BASE_URL = "http://localhost:8080/api";
+const API_BOOKING_URL = "http://localhost:8080/api";
+const API_CUSTOMER_URL = "http://localhost:8081/api";
 
 const inputStyle = {
   padding: "0.5rem",
@@ -60,8 +61,8 @@ export default function BookingsPage() {
     loadData();
   }, []);
 
-  async function apiRequest(path, options = {}) {
-    const response = await fetch(`${API_BASE_URL}${path}`, {
+  async function apiRequest(baseUrl, path, options = {}) {
+    const response = await fetch(`${baseUrl}${path}`, {
       headers: {
         "Content-Type": "application/json",
         ...options.headers,
@@ -80,8 +81,8 @@ export default function BookingsPage() {
   async function loadData() {
     try {
       const [roomsData, customersData] = await Promise.all([
-        apiRequest("/rooms"),
-        apiRequest("/customers"),
+        apiRequest(API_BOOKING_URL, "/rooms"),
+        apiRequest(API_CUSTOMER_URL, "/customers"),
       ]);
 
       setRooms(roomsData);
@@ -96,7 +97,7 @@ export default function BookingsPage() {
     event.preventDefault();
 
     try {
-      await apiRequest("/bookings", {
+      await apiRequest(API_BOOKING_URL, "/bookings", {
         method: "POST",
         body: JSON.stringify({
           customerId: Number(bookingForm.customerId),
