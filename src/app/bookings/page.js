@@ -2,7 +2,7 @@
 
 import Navbar from "../components/Navbar";
 import HeroBanner from "../components/HeroBanner";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 const API_BOOKING_URL = "http://localhost:8080/api";
@@ -27,7 +27,7 @@ const buttonStyle = {
   cursor: "pointer",
 };
 
-export default function BookingsPage() {
+function BookingsContent() {
   const searchParams = useSearchParams();
 
   const [rooms, setRooms] = useState([]);
@@ -282,5 +282,12 @@ export default function BookingsPage() {
         </section>
       </div>
     </main>
+  );
+}
+export default function BookingsPage() {
+  return (
+    <Suspense fallback={<p>Loading bookings...</p>}>
+      <BookingsContent />
+    </Suspense>
   );
 }
